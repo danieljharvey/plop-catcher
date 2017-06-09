@@ -1,0 +1,2 @@
+DirectoryIndex wrapper.php index.html index.php /wrapper.php
+FallbackResource /wrapper.php
