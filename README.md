@@ -8,6 +8,8 @@ Plop($outputMode, $callbackFunction);
 $outputMode can be 'HTML', 'JSON' or 'ARRAY'
 $callbackFunction will receive html, json or a PHP array, and is called if a fatal error uncaught exception stops execution allowing graceful error screens or debug output.
 
+The HTML output will be initially invisible - press Shift-Enter to show or hide output.
+
 ~~~~
 $plop = new \DanielJHarvey\PlopCatcher\Plop('HTML',function($html) {
     outputHTML($html);
