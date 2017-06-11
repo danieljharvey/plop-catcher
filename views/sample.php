@@ -17,8 +17,6 @@ $cat = "Cat";
 
 <?php
 
-//$dog = $mouse;
-
 echo "<h1>{$dog}</h1>";
 
 $plop->logComment("So this thing happened and it was less than ideal");
@@ -45,7 +43,7 @@ echo $poo;
 
 echo "Do we get here?";
 
-//throw new Exception("Last exception, great job");
+throw new Exception("Last exception, great job");
 
 //require_once(" a big poo ");
 

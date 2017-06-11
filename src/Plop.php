@@ -7,6 +7,7 @@ class Plop {
 	protected $controller;
 	protected $logger;
 	protected $errorCatcher;
+	protected $stats;
 
 	protected $enabled = false;
 	protected $outputMode;
@@ -29,7 +30,8 @@ class Plop {
 
 	protected function setUp($outputMode, $crashCallback) {
 		$this->logger = new Logger();
-		$this->controller = new Controller($this->logger, $outputMode, $crashCallback);
+		$this->stats = new Stats();
+		$this->controller = new Controller($this->logger, $this->stats, $outputMode, $crashCallback);
 		$this->errorCatcher = new ErrorCatcher($this->logger, $this->controller);
 		$this->errorCatcher->enable();
 		$this->enabled = true;

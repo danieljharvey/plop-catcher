@@ -1,0 +1,16 @@
+#errorBox .exception {
+    border: 1px gray solid;
+    padding: 11px;
+    font-family: helvetica;
+    font-size :12px;
+}
+#errorBox .exception p {
+	margin : 5px
+	;
+}
+#errorBox, #errorBox .stackTrace {
+	display: none;
+}
+#errorBox.visible, #errorBox .stackTrace.visible {
+	display: block;
+}

@@ -69,6 +69,7 @@ class ErrorCatcher {
 		} catch (\Exception $e) {
 			// something's gone wrong in shutdown
 			echo "<p class='red'>Exception triggered in Custom Exception Handler, cannot handle</p>";
+			return false;
 		}
 	}
 

@@ -45,9 +45,9 @@ class Logger {
 			'errorType'=>'Fatal Error',
 			'file'=>"Unknown",
 			'line'=>0,
-			'message'=>"Shutdown"
+			'message'=>"Shutdown",
+			'stackTrace'=>[]
 		];
-		$data['stackTrace'] = $this->addMainToStackTrace($data, []);
 
 	  	if ($error !== NULL) {
 	  		$data['file'] = $error["file"];
@@ -82,12 +82,13 @@ class Logger {
 	}
 
 	protected function cleanStackTrace($stackTrace) {
-		if (count($stackTrace)==0) return $data;
-		
+		if (count($stackTrace)==0) return $stackTrace;
+
 		foreach ($stackTrace as $id=>$trace) {
 
 			if (!isset($trace['line'])) {
-				var_dump($trace);
+				unset($stackTrace[$id]);
+				continue;
 			}
 
 			if ($this->isTraceDuplicate($trace, $id, $stackTrace)) {

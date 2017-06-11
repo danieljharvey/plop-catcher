@@ -1,56 +1,5 @@
 <link rel="stylesheet" href="/css/solarized-light.css">
 <script src="/js/prism.js"></script>
-<script>
-
-	document.addEventListener("keypress", function(event) {
-	    var isShift = event.shiftKey
-	    if (event.keyCode == 13 && isShift) {
-	        toggleHelpBox();
-	    }
-	});
-
-	function toggleHelpBox() {
-		var errorBox = document.getElementById('errorBox');
-		if (errorBox.classList.contains('visible')) {
-			// hide it
-			errorBox.classList.remove('visible');
-		} else {
-			// show it
-			errorBox.classList.add('visible');
-		}
-	}
-
-	function showTrace(id) {
-		var stackTrace = document.getElementById('stackTrace' + id);
-		if (stackTrace.classList.contains('visible')) {
-			// hide it
-			stackTrace.classList.remove('visible');
-		} else {
-			// show it
-			stackTrace.classList.add('visible');
-		}
-	}
-
-</script>
-<style>
-	#errorBox .exception {
-	    border: 1px gray solid;
-	    padding: 11px;
-	    font-family: helvetica;
-	    font-size :12px;
-	}
-	#errorBox .exception p {
-		margin : 5px
-		;
-	}
-	#errorBox, #errorBox .stackTrace {
-		display: none;
-	}
-	#errorBox.visible, #errorBox .stackTrace.visible {
-		display: block;
-	}
-</style>
-
 
 <?php
 
@@ -66,8 +15,8 @@ $viewsPath = realpath(dirname(__FILE__).'/../views/');
 
 $requestPath = $viewsPath."/".$request;
 
-$plop = new \DanielJHarvey\PlopCatcher\Plop('HTML',function($html) {
-	outputPlops($html);
+$plop = new \DanielJHarvey\PlopCatcher\Plop('ARRAY',function($array) {
+	outputArray($array);
 });
 
 $plop->enable();
@@ -79,9 +28,13 @@ if (file_exists($requestPath) && is_file($requestPath)) {
 }
 echo "What?";
 
-outputPlops($plop->output());
+outputArray($plop->output());
 
 function outputPlops($html) {
 	echo "I am a local function outputting this code";
 	echo $html;
+}
+
+function outputArray($array) {
+	var_dump($array);
 }

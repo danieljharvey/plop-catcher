@@ -10,14 +10,14 @@ class HTMLOutput {
 		'Exception'=>'lightpink'
 	];
 
-	protected $logger;
+	protected $jsPath = 'js/Plops.js';
+	protected $cssPath = 'css/plops.css';
 
-	public function __construct(Logger $logger) {
-		$this->logger = $logger;
-	}
-
-	public function getOutput() {
-		return $this->drawErrorBox($this->logger->getEvents());
+	public function getOutput($data) {
+		$c="<script>".$this->getJS()."</script>";
+		$c.="<style>".$this->getCSS()."</style>";
+		$c.=$this->drawErrorBox($data['events']);
+		return $c;
 	}
 
 	public function drawErrorBox($events) {
@@ -39,7 +39,7 @@ class HTMLOutput {
 		$color = $this->getExceptionColour($exception);
 		$id = uniqid();
 		$c="
-		<div class='exception' onClick='showTrace(\"{$id}\");' style='background-color: {$color};'>
+		<div class='exception' onClick='plops.showTrace(\"{$id}\");' style='background-color: {$color};'>
 			<p><b>{$exception['errorType']}</b> in <b>{$exception['file']}</b> at line <b>{$exception['line']}</b></p>
 			<p><b>Message</b>: {$exception['message']}</p>
 			<div id='stackTrace{$id}' class='stackTrace'>
@@ -73,5 +73,21 @@ class HTMLOutput {
 		}
 		$c.="</code></pre>";
 		return $c;
+	}
+
+	protected function getJS() {
+		$jsPath = dirname(__FILE__)."/".$this->jsPath;
+		return $this->getFileContents($jsPath);
+	}
+
+	protected function getCSS() {
+		$cssPath = dirname(__FILE__)."/".$this->cssPath;
+		return $this->getFileContents($cssPath);
+	}
+
+	protected function getFileContents($path) {
+		if (!file_exists($path)) return false;
+		if (!is_file($path)) return false;
+		return file_get_contents($path);
 	}
 }
