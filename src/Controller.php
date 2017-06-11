@@ -11,10 +11,12 @@ class Controller {
 
 	protected $logger;
 	protected $stats;
+	protected $state;
 
-	public function __construct(Logger $logger, Stats $stats, $outputMode = 'HTML', $crashCallback = NULL) {
+	public function __construct(Logger $logger, Stats $stats, State $state, $outputMode = 'HTML', $crashCallback = NULL) {
 		$this->logger = $logger;
 		$this->stats = $stats;
+		$this->state = $state;
 
 		if (in_array($outputMode,$this->validOutputModes)) {
 			$this->outputMode = $outputMode;
@@ -40,11 +42,10 @@ class Controller {
 	protected function getData() {
 		return [
 			'stats'=>$this->stats->getStats(),
-			'events'=>$this->logger->getEvents()
+			'events'=>$this->logger->getEvents(),
+			'state'=>$this->state->getState()
 		];
 	}
-
-	
 
 	protected function getOutputClass() {
 		if ($this->outputMode == 'HTML') {

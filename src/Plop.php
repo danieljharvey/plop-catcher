@@ -31,7 +31,13 @@ class Plop {
 	protected function setUp($outputMode, $crashCallback) {
 		$this->logger = new Logger();
 		$this->stats = new Stats();
-		$this->controller = new Controller($this->logger, $this->stats, $outputMode, $crashCallback);
+		$this->state = new State([
+			'post'=>$_POST,
+			'get'=>$_GET,
+			'server'=>$_SERVER,
+			'files'=>$_FILES
+		]);
+		$this->controller = new Controller($this->logger, $this->stats, $this->state, $outputMode, $crashCallback);
 		$this->errorCatcher = new ErrorCatcher($this->logger, $this->controller);
 		$this->errorCatcher->enable();
 		$this->enabled = true;
