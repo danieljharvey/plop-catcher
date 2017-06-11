@@ -23,7 +23,7 @@ echo "<h1>{$dog}</h1>";
 
 
 
-logComment("So this thing happened and it was less than ideal");
+$logger->logComment("So this thing happened and it was less than ideal");
 
 try {
 	throw new Exception("Tortoise");	
@@ -32,8 +32,9 @@ try {
 }
 
 function bum() {
+	global $logger;
 	echo $bum;
-	logComment("So I am logging a comment and hoping for a stack trace");
+	$logger->logComment("So I am logging a comment and hoping for a stack trace");
 	return $turd;
 }
 function slopDog() {
@@ -46,7 +47,7 @@ echo $poo;
 
 echo "Do we get here?";
 
-throw new Exception("Last exception, great job");
+//throw new Exception("Last exception, great job");
 
 //require_once(" a big poo ");
 
