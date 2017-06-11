@@ -66,9 +66,11 @@ $viewsPath = realpath(dirname(__FILE__).'/../views/');
 
 $requestPath = $viewsPath."/".$request;
 
-$logger = new \DanielJHarvey\PlopCatcher\Logger;
-$errorCatcher = new \DanielJHarvey\PlopCatcher\ErrorCatcher($logger);
-$errorCatcher->enable();
+$plop = new \DanielJHarvey\PlopCatcher\Plop('HTML',function($html) {
+	outputPlops($html);
+});
+
+$plop->enable();
 
 if (file_exists($requestPath) && is_file($requestPath)) {
 	include_once($requestPath);		
@@ -77,17 +79,9 @@ if (file_exists($requestPath) && is_file($requestPath)) {
 }
 echo "What?";
 
-$jsonOutput = new \DanielJHarvey\PlopCatcher\JSONOutput($logger);
+outputPlops($plop->output());
 
-echo "<br><br>";
-echo $jsonOutput->getOutput();
-echo "<br><br>";
-
-$output = $jsonOutput->getOutput();
-echo "<script>console.log({$output})</script>";
-
-$htmlOutput = new \DanielJHarvey\PlopCatcher\HTMLOutput($logger);
-echo $htmlOutput->getOutput();
-
-
-//echo outputErrorBox($logger);
+function outputPlops($html) {
+	echo "I am a local function outputting this code";
+	echo $html;
+}

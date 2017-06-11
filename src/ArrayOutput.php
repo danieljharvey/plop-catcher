@@ -1,8 +1,10 @@
 <?php
 
-namespace \DanielJHarvey\PlopCatcher;
+namespace DanielJHarvey\PlopCatcher;
 
-class ArrayOutput extends Output {
+// used for returning an array of debug information that can be used in PHP
+
+class ArrayOutput {
 	
 	protected $logger;
 

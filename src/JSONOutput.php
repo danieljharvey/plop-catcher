@@ -2,6 +2,8 @@
 
 namespace DanielJHarvey\PlopCatcher;
 
+// used for creating debugging JSON that can be saved directly to a log file
+
 class JSONOutput {
 	
 	protected $logger;

@@ -111,9 +111,17 @@ class Logger {
 		foreach ($stackTrace as $oldID=>$oldTrace) {
 			// only compare to previous entries so we don't compare with ourselves
 			if ($oldID >= $id) continue;
-			if ($trace['file']==$oldTrace['file'] && $trace['line']==$oldTrace['line']) return true;
+			if ($this->compareTracesAreSame($trace, $oldTrace)) return true;
+			
 		}
 		return false;
+	}
+
+	function compareTracesAreSame($trace, $oldTrace) {
+		if (!isset($trace['file'])) return false;
+		if (!isset($oldTrace['file'])) return false;
+
+		if ($trace['file']==$oldTrace['file'] && $trace['line']==$oldTrace['line']) return true;
 	}
 
 	protected function getCodeLines($filename, $lineNo) {
@@ -123,6 +131,7 @@ class Logger {
 	}
 
     protected function readFileAsArray($filename) {
+    	if (!$filename) return false;
     	return file($filename); //file in to an array
     }
 

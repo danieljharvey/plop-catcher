@@ -6,9 +6,11 @@ class ErrorCatcher {
 	
 	protected $active = false;
 	protected $logger;
+	protected $controller;
 
-	public function __construct(Logger $logger) {
+	public function __construct(Logger $logger, Controller $controller) {
 		$this->logger = $logger;
+		$this->controller = $controller;
 	}
 
 	public function getActive() {
@@ -63,10 +65,10 @@ class ErrorCatcher {
 	public function exceptionHandler($exception) {
 		try {
 			$this->logger->logException($exception, 'Exception');
-			//echo "<h1>EXCEPTION HANDLER</h1>";
-			//echo outputErrorBox();	
+			$this->controller->onShutdown();
 		} catch (\Exception $e) {
-			//echo "<h1>exception handler for the exception handler</h1>";
+			// something's gone wrong in shutdown
+			echo "<p class='red'>Exception triggered in Custom Exception Handler, cannot handle</p>";
 		}
 	}
 
@@ -78,6 +80,7 @@ class ErrorCatcher {
 	        return false;    
 	    }
 	    $this->logger->logShutdown($error);
+	    $this->controller->onShutdown(); // possibly do a last minute output of something
 	    return true;
 	}
 
