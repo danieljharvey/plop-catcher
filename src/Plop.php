@@ -4,11 +4,16 @@ namespace DanielJHarvey\PlopCatcher;
 
 class Plop {
 	
+	// core elements
 	protected $controller;
 	protected $logger;
 	protected $errorCatcher;
 	protected $stats;
 
+	// helpers
+	protected $fileWrapper;
+
+	// properties
 	protected $enabled = false;
 	protected $outputMode;
 	protected $crashCallback = NULL;
@@ -29,7 +34,8 @@ class Plop {
 	}
 
 	protected function setUp($outputMode, $crashCallback) {
-		$this->logger = new Logger();
+		$this->fileWrapper = new \DanielJHarvey\FileWrapper\FileWrapper;
+		$this->logger = new Logger($this->fileWrapper);
 		$this->stats = new Stats();
 		$this->state = new State([
 			'post'=>$_POST,

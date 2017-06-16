@@ -5,6 +5,11 @@ namespace DanielJHarvey\PlopCatcher;
 class Logger {
 	
 	protected $events=[];
+	protected $fileWrapper;
+
+	public function __construct(\DanielJHarvey\FileWrapper\FileWrapper $fileWrapper) {
+		$this->fileWrapper = $fileWrapper;
+	}
 
 	function getEvents() {
 		return $this->events;
@@ -91,6 +96,11 @@ class Logger {
 				continue;
 			}
 
+			if ($this->traceIsPartOfLogger($trace['file'])) {
+				unset($stackTrace[$id]);
+				continue;
+			}
+
 			if ($this->isTraceDuplicate($trace, $id, $stackTrace)) {
 				unset($stackTrace[$id]);
 				continue;
@@ -115,6 +125,10 @@ class Logger {
 			if ($this->compareTracesAreSame($trace, $oldTrace)) return true;
 			
 		}
+		return false;
+	}
+
+	public function traceIsPartOfLogger($file) {
 		return false;
 	}
 

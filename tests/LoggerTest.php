@@ -6,6 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends TestCase {
 
+	protected $fileWrapper;
+
+	function setUp() {
+		$this->fileWrapper = $this->getMockBuilder("\DanielJHarvey\FileWrapper\FileWrapper")
+			->getMock();
+	}
+
 	public function testCompareTraces() {
 		$oldTrace=[
 			'file' =>'/Users/Daniel/Sites/plop-catcher/src/ErrorCatcher.php',
@@ -23,7 +30,7 @@ class LoggerTest extends TestCase {
 			'args' => []
 		];
 
-		$logger = new \DanielJHarvey\PlopCatcher\Logger();
+		$logger = new \DanielJHarvey\PlopCatcher\Logger($this->fileWrapper);
 
 		$expected = false;
 
@@ -35,4 +42,37 @@ class LoggerTest extends TestCase {
 			"Could not deal with weird class based exception"
     	);
     }
+	
+	function traceIsPartOfLoggerData() {
+		return [
+			[
+				['file'=>'/path/to/logger/blah.php','line'=>100],
+				true
+			],
+			[
+				['file'=>'/path/elsewhere/internet.php','line'=>199],
+				false
+			],
+			[
+				['file'=>'path/to/logger/somethingelse/yeah.php','line'=>666],
+				true
+			]	
+		];
+	}
+
+	/**
+	* @test
+	* @dataProvider traceIsPartOfLoggerData
+	*/
+	public function testRemoveLoggerFileTraces($filename, $expected) {
+		$logger = new \DanielJHarvey\PlopCatcher\Logger($this->fileWrapper);
+
+		$return = $logger->traceIsPartOfLogger($filename);
+
+		$this->assertEquals(
+			$expected,
+			$return,
+			"Could not identify files belonging to this project"
+		);
+	}
 }
