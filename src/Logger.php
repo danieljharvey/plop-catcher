@@ -129,6 +129,8 @@ class Logger {
 	}
 
 	public function traceIsPartOfLogger($file) {
+		$currentDir = $this->fileWrapper->dirName(__FILE__);
+		if (strpos($file, $currentDir)!==false) return true;
 		return false;
 	}
 

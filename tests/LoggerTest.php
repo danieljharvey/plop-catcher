@@ -46,15 +46,15 @@ class LoggerTest extends TestCase {
 	function traceIsPartOfLoggerData() {
 		return [
 			[
-				['file'=>'/path/to/logger/blah.php','line'=>100],
+				'/path/to/logger/blah.php',
 				true
 			],
 			[
-				['file'=>'/path/elsewhere/internet.php','line'=>199],
+				'path/elsewhere/internet.php',
 				false
 			],
 			[
-				['file'=>'path/to/logger/somethingelse/yeah.php','line'=>666],
+				'path/to/logger/somethingelse/yeah.php',
 				true
 			]	
 		];
@@ -65,6 +65,10 @@ class LoggerTest extends TestCase {
 	* @dataProvider traceIsPartOfLoggerData
 	*/
 	public function testRemoveLoggerFileTraces($filename, $expected) {
+		$this->fileWrapper->expects($this->once())
+			->method('dirName')
+			->will($this->returnValue('path/to/logger'));
+		
 		$logger = new \DanielJHarvey\PlopCatcher\Logger($this->fileWrapper);
 
 		$return = $logger->traceIsPartOfLogger($filename);
