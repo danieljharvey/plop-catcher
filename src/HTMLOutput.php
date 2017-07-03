@@ -21,12 +21,25 @@ class HTMLOutput {
 	}
 
 	public function drawErrorBox($events) {
-		$c="<div id='errorBox'>";
+		$c="<div id='errorBox' class='visible'>";
+		$c.= $this->titleBar();
 		foreach ($events as $event) {
 			$c.=$this->drawException($event);
 		}
 		$c.="</div>";
 		return $c;
+	}
+
+	protected function titleBar() {
+		return "
+			<div class='titleBar'>
+				".$this->drawHideBox()."
+				<p><b>PHP Error Console</b>: press shift + enter to toggle</p>
+			</div>";
+	}
+
+	protected function drawHideBox() {
+		return "<div class='plopsToggleBox' onClick='plops.toggleHelpBox();'>X</div>";
 	}
 
 	function getExceptionColour($event) {
