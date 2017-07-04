@@ -71,9 +71,4 @@ class Plop {
 		$this->errorCatcher->disable();
 		$this->enabled = false;
 	}
-
-	// if we've set up a destruct callback - run it when this object is about to die
-	public function __destruct() {
-		$this->controller->onDestruct();
-	}
 }

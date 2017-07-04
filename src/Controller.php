@@ -74,4 +74,9 @@ class Controller {
 			throw new Exception("Invalid output type selected!");
 		}
 	}
+
+	// if we've set up a destruct callback - run it when this object is about to die
+	public function __destruct() {
+		$this->onDestruct();
+	}
 }
