@@ -32,8 +32,6 @@ echo $nonExistantVariable;
 
 $plop->logComment("STUFF ETC");
 
-$directory = new RecursiveDirectoryIterator(dirname(__FILE__));
-
 throw new Exception("dsfjsdofjoisdojfi");
 
 //require_once("fjsdjfjsdoijoi");

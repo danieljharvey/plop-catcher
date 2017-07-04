@@ -17,16 +17,17 @@ class HTMLOutput {
 	public function getOutput($data) {
 		$c="<script>".$this->getJS()."</script>";
 		$c.="<style>".$this->getCSS()."</style>";
-		$errorBox = $this->drawErrorBox($data['events']);
+		$errorBox = $this->drawErrorBox($data);
 		if (!$errorBox) return false; // if no events, don't show anything
 		$c.= $errorBox;
 		return $c;
 	}
 
-	public function drawErrorBox($events) {
+	public function drawErrorBox($data) {
+		$events = $data['events'];
 		if (count($events)==0) return false;
 		$c="<div id='errorBox'>";
-		$c.= $this->drawTitleBar($events);
+		$c.= $this->drawTitleBar($data);
 		foreach ($events as $event) {
 			$c.=$this->drawException($event);
 		}
@@ -34,7 +35,9 @@ class HTMLOutput {
 		return $c;
 	}
 
-	protected function drawTitleBar($events) {
+	protected function drawTitleBar($data) {
+		$events = $data['events'];
+		$stats = $data['stats'];
 		$count = count($events);
 		return "
 			<div class='titleBar'>
@@ -43,6 +46,7 @@ class HTMLOutput {
 					<b>PHP Error Console ({$count})</b>: press shift + enter to toggle
 				</p>
 				".$this->drawEventsByType($events)."
+				".$this->drawTimeStats($stats)."
 			</div>";
 	}
 
@@ -73,6 +77,15 @@ class HTMLOutput {
 			<p onClick='{$onClick}' id='{$id}' class='toggle {$cssClass}'>
 				<b>{$count} {$typeString}</b>
 			</p>";
+	}
+
+	protected function drawTimeStats($stats) {
+		$c="";
+		foreach ($stats as $type=>$stat) {
+			$time = round($stat,6)*1000;
+			$c.="<p><b>{$type}</b>:{$time}ms</p>";
+		}
+		return $c;
 	}
 
 	protected function drawHideBox() {

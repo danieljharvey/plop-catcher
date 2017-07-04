@@ -11,10 +11,11 @@ class Stats {
 	protected $startTime;
 	protected $lastTick;
 	protected $largestTick=0;
+	protected $countTicks=0;
 
 	public function __construct() {
 		$this->setStartTime();
-		$this->setTickHandler();
+		//$this->setTickHandler();
 	}
 
 	public function __destruct() {
@@ -32,12 +33,16 @@ class Stats {
 	}
 
 	public function getStats() {
+		$this->tickHandler();
 		return [
-			'elaspedTime'=>$this->getElapsedTime($this->startTime)
+			'elaspedTime'=>$this->getElapsedTime($this->startTime)/*,
+			'largestTick'=>$this->largestTick,
+			'averageTick'=>$this->getElapsedTime($this->startTime) / $this->countTicks*/
 		];
 	}
 
 	protected function setTickHandler() {
+		declare(ticks=1);
 		register_tick_function([
 			$this,
 			'tickHandler'
@@ -49,7 +54,7 @@ class Stats {
 	}
 
 	public function tickHandler($message=false) {
-		echo '.';
+		$this->countTicks++;
 		$elapsed = $this->getElapsedTime($this->lastTick);
 		if ($elapsed > $this->largestTick) {
 			$this->largestTick = $elapsed;
