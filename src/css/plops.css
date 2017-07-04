@@ -3,26 +3,54 @@
     padding: 11px;
     font-size :12px;
 }
+
 #errorBox .exception p {
 	margin : 5px;
 }
+
 #errorBox, #errorBox .stackTrace {
 	display: none;
 }
+
 #errorBox.visible, #errorBox .stackTrace.visible {
 	display: block;
 }
 
+#errorBox .exception {
+    display:none;
+}
+
+#errorBox.visible .exception{
+    display: block;
+}
+
 div#errorBox {
+    display: block;
     font-family: helvetica;
     width: 100%;
     bottom: 0px;
     position: fixed;
-    max-height: 30%;
+    /*max-height: 30%;*/
+    max-height: 24px;
+    overflow-y: hidden;
+    -webkit-transition: max-height 0.2s;
+    -moz-transition: max-height 0.2s;
+    -ms-transition: max-height 0.2s;
+    -o-transition: max-height 0.2s;
+    transition: max-height 0.2s;
+}
+
+div#errorBox.visible {
+    max-height: 40%;
     overflow-y: scroll;
 }
 
+div#errorBox.visible div.plopsToggleBox {
+    display: block;
+}
+
 div.plopsToggleBox {
+    display: none;
     position: absolute;
     padding: 3px 6px;
     right: 6px;
@@ -47,8 +75,31 @@ div.plopsToggleBox {
     padding-left: 12px;
     padding-top: 5px;
     padding-bottom: 5px;
-    background-color: rgb(240,240,240);
     display: inline-block;
     padding-right: 12px;
     margin-left: 6px;
+}
+
+.titleBar p {
+    background-color: rgb(240,240,240);
+}
+
+#errorBox .plopComment {
+    background-color: lightgreen;
+}
+
+#errorBox .plopError {
+    background-color: lightblue;
+}
+
+#errorBox .plopException {
+    background-color: lightpink;
+}
+
+#errorBox .plopFatal {
+    background-color: orange;
+}
+
+#errorBox .toggle.disabled {
+    background-color: lightgray;
 }

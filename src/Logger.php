@@ -12,7 +12,7 @@ class Logger {
 	}
 
 	function getEvents() {
-		return $this->events;
+		return array_reverse($this->events);
 	}
 
 	function logException($e, $type) {
@@ -110,9 +110,6 @@ class Logger {
 				unset($stackTrace[$id]);
 				continue;
 			}
-
-			$codeLines = $this->getCodeLines($trace['file'], $trace['line']);
-			$stackTrace[$id]['codeLines'] = $codeLines;
 		}
 
 		return array_values($stackTrace);
@@ -141,30 +138,4 @@ class Logger {
 		if ($trace['file']==$oldTrace['file'] && $trace['line']==$oldTrace['line']) return true;
 	}
 
-	protected function getCodeLines($filename, $lineNo) {
-		$lines = $this->readFileAsArray($filename);
-		if (!$lines) return false;
-		return $this->parseCodeLines($lines, $lineNo);
-	}
-
-    protected function readFileAsArray($filename) {
-    	if (!$filename) return false;
-    	return file($filename); //file in to an array
-    }
-
-    protected function parseCodeLines($lines, $lineNo) {
-
-		$firstLine = $lineNo - 3;
-		if ($firstLine <0) $firstLine=0;
-
-		$lastLine = $lineNo + 1;
-		if ($lastLine >= count($lines)) $lastLine = count($lines) - 1;
-
-		$selectedLines=[];
-		for ($i=$firstLine; $i<=$lastLine; $i++) {
-			$selectedLines[$i + 1] = $lines[$i];
-		}
-
-		return $selectedLines;
-	}
 }

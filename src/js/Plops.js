@@ -34,6 +34,20 @@ function Plops() {
 		}
 	}
 
+	this.toggleCategory = function(type) {
+		console.log('toggleCategory '+ type);
+		var toggleButton = document.getElementById('toggle' + type);
+		if (toggleButton.classList.contains('disabled')) {
+			// show it
+			// also show stack traces  with class of 'type'
+			toggleButton.classList.remove('disabled');
+		} else {
+			// hide it
+			// also hide stack traces with class of 'type'
+			toggleButton.classList.add('disabled');
+		}
+	}
+
 	this.construct();
 }
 

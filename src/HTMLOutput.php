@@ -4,10 +4,11 @@ namespace DanielJHarvey\PlopCatcher;
 
 class HTMLOutput {
 	
-	protected $colors=[
-		'Comment'=>'lightgreen',
-		'Error'=>'lightblue',
-		'Exception'=>'lightpink'
+	protected $cssClasses=[
+		'Comment'=>'plopComment',
+		'Error'=>'plopError',
+		'Exception'=>'plopException',
+		'Fatal Error'=>'plopFatal'
 	];
 
 	protected $jsPath = 'js/Plops.js';
@@ -16,13 +17,16 @@ class HTMLOutput {
 	public function getOutput($data) {
 		$c="<script>".$this->getJS()."</script>";
 		$c.="<style>".$this->getCSS()."</style>";
-		$c.=$this->drawErrorBox($data['events']);
+		$errorBox = $this->drawErrorBox($data['events']);
+		if (!$errorBox) return false; // if no events, don't show anything
+		$c.= $errorBox;
 		return $c;
 	}
 
 	public function drawErrorBox($events) {
-		$c="<div id='errorBox' class='visible'>";
-		$c.= $this->titleBar();
+		if (count($events)==0) return false;
+		$c="<div id='errorBox'>";
+		$c.= $this->drawTitleBar($events);
 		foreach ($events as $event) {
 			$c.=$this->drawException($event);
 		}
@@ -30,29 +34,61 @@ class HTMLOutput {
 		return $c;
 	}
 
-	protected function titleBar() {
+	protected function drawTitleBar($events) {
+		$count = count($events);
 		return "
 			<div class='titleBar'>
 				".$this->drawHideBox()."
-				<p><b>PHP Error Console</b>: press shift + enter to toggle</p>
+				<p onClick='plops.toggleHelpBox();'>
+					<b>PHP Error Console ({$count})</b>: press shift + enter to toggle
+				</p>
+				".$this->drawEventsByType($events)."
 			</div>";
+	}
+
+	protected function drawEventsByType($events) {
+		$types = [];
+		foreach ($events as $event) {
+			$errorType = $event['errorType'];
+			if (!array_key_exists($errorType,$types)) {
+				$types[$errorType] = 1;
+			} else {
+				$types[$errorType]++;
+			}
+		}
+		$c="";
+		foreach ($types as $type=>$count) {
+			$c.=$this->drawErrorTypeBox($type, $count);
+		}
+		return $c;
+	}
+
+	protected function drawErrorTypeBox($type, $count) {
+		$cssClass = $this->getErrorTypeClass($type);
+		$typeString = $type;
+		if ($count>1) $typeString.="s";
+		$id = 'toggle'.$cssClass;
+		$onClick = "plops.toggleCategory(\"{$cssClass}\");";
+		return "
+			<p onClick='{$onClick}' id='{$id}' class='toggle {$cssClass}'>
+				<b>{$count} {$typeString}</b>
+			</p>";
 	}
 
 	protected function drawHideBox() {
 		return "<div class='plopsToggleBox' onClick='plops.toggleHelpBox();'>X</div>";
 	}
 
-	function getExceptionColour($event) {
-		$type = $event['errorType'];
-		if (isset($this->colors[$type])) return $this->colors[$type];
-		return 'lightgrey';
+	function getErrorTypeClass($type) {
+		if (isset($this->cssClasses[$type])) return $this->cssClasses[$type];
+		return 'plopOther';
 	}
 
 	function drawException($exception) {
-		$color = $this->getExceptionColour($exception);
+		$cssClass = $this->getErrorTypeClass($exception['errorType']);
 		$id = uniqid();
 		$c="
-		<div class='exception' onClick='plops.showTrace(\"{$id}\");' style='background-color: {$color};'>
+		<div class='exception {$cssClass}' onClick='plops.showTrace(\"{$id}\");'>
 			<p><b>{$exception['errorType']}</b> in <b>{$exception['file']}</b> at line <b>{$exception['line']}</b></p>
 			<p><b>Message</b>: {$exception['message']}</p>
 			<div id='stackTrace{$id}' class='stackTrace'>
@@ -68,13 +104,14 @@ class HTMLOutput {
 			$c.="
 			<div>
 				<p>Stack trace {$i}: <b>".$entry['file']."</b>, line <b>{$entry['line']}</b></p>
-				".$this->drawLines($entry['codeLines'],$entry['line'])."
+				".$this->drawLines($entry['file'],$entry['line'])."
 			</div>";
 		}
 		return $c;
 	}
 
-	function drawLines($lines, $mainLineNo) {
+	function drawLines($file, $mainLineNo) {
+		$lines = $this->getCodeLines($file, $mainLineNo);
 		$c="<pre><code class='language-php'>";
 		foreach ($lines as $lineNo=>$line) {
 			if ($lineNo == $mainLineNo) {
@@ -102,5 +139,32 @@ class HTMLOutput {
 		if (!file_exists($path)) return false;
 		if (!is_file($path)) return false;
 		return file_get_contents($path);
+	}
+
+	protected function getCodeLines($filename, $lineNo) {
+		$lines = $this->readFileAsArray($filename);
+		if (!$lines) return false;
+		return $this->parseCodeLines($lines, $lineNo);
+	}
+
+    protected function readFileAsArray($filename) {
+    	if (!$filename) return false;
+    	return file($filename); //file in to an array
+    }
+
+    protected function parseCodeLines($lines, $lineNo) {
+
+		$firstLine = $lineNo - 3;
+		if ($firstLine <0) $firstLine=0;
+
+		$lastLine = $lineNo + 1;
+		if ($lastLine >= count($lines)) $lastLine = count($lines) - 1;
+
+		$selectedLines=[];
+		for ($i=$firstLine; $i<=$lastLine; $i++) {
+			$selectedLines[$i + 1] = $lines[$i];
+		}
+
+		return $selectedLines;
 	}
 }

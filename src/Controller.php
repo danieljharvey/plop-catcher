@@ -8,12 +8,15 @@ class Controller {
 	protected $validOutputModes = ['HTML', 'ARRAY', 'JSON'];
 
 	protected $crashCallback = NULL; // callback function when system fails
+	protected $destructCallback = NULL; // callback function when this object is destructing
 
 	protected $logger;
 	protected $stats;
 	protected $state;
 
-	public function __construct(Logger $logger, Stats $stats, State $state, $outputMode = 'HTML', $crashCallback = NULL) {
+	protected $hasOutput = false;
+
+	public function __construct(Logger $logger, Stats $stats, State $state, $outputMode = 'HTML', $crashCallback = NULL, $destructCallback = NULL) {
 		$this->logger = $logger;
 		$this->stats = $stats;
 		$this->state = $state;
@@ -22,6 +25,7 @@ class Controller {
 			$this->outputMode = $outputMode;
 		}
 		$this->crashCallback = $crashCallback;
+		$this->destructCallback = $destructCallback;
 	}
 
 	public function output() {
@@ -35,6 +39,18 @@ class Controller {
 			$data = $this->getData();
 			$output=$this->output($data);
 			$callback = $this->crashCallback;
+			$this->hasOutput = true;
+			$callback($output);
+		}
+	}
+
+	public function onDestruct() {
+		if ($this->hasOutput) return false; // don't need this if already done crashCallback
+		if ($this->destructCallback) {
+			$data = $this->getData();
+			$output=$this->output($data);
+			$callback = $this->destructCallback;
+			$this->hasOutput = true;
 			$callback($output);
 		}
 	}
