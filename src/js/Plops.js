@@ -37,14 +37,31 @@ function Plops() {
 	this.toggleCategory = function(type) {
 		console.log('toggleCategory '+ type);
 		var toggleButton = document.getElementById('toggle' + type);
+		var errorBox = document.getElementById('errorBox');
 		if (toggleButton.classList.contains('disabled')) {
 			// show it
 			// also show stack traces  with class of 'type'
 			toggleButton.classList.remove('disabled');
+			var stackTraces = errorBox.getElementsByClassName(type);			
+			for (var i in stackTraces) {
+				var stackTrace = stackTraces[i];
+				console.log(stackTrace);
+				if (stackTrace.classList && stackTrace.classList.contains('exception')) {
+					stackTrace.classList.add('visible');
+				}
+			}
 		} else {
 			// hide it
 			// also hide stack traces with class of 'type'
 			toggleButton.classList.add('disabled');
+			var stackTraces = errorBox.getElementsByClassName(type);			
+			for (var i in stackTraces) {
+				var stackTrace = stackTraces[i];
+				console.log(stackTrace);
+				if (stackTrace.classList && stackTrace.classList.contains('exception')) {
+					stackTrace.classList.remove('visible');
+				}
+			}
 		}
 	}
 

@@ -101,7 +101,7 @@ class HTMLOutput {
 		$cssClass = $this->getErrorTypeClass($exception['errorType']);
 		$id = uniqid();
 		$c="
-		<div class='exception {$cssClass}' onClick='plops.showTrace(\"{$id}\");'>
+		<div class='exception visible {$cssClass}' onClick='plops.showTrace(\"{$id}\");'>
 			<p><b>{$exception['errorType']}</b> in <b>{$exception['file']}</b> at line <b>{$exception['line']}</b></p>
 			<p><b>Message</b>: {$exception['message']}</p>
 			<div id='stackTrace{$id}' class='stackTrace'>

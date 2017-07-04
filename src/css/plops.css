@@ -2,6 +2,11 @@
     border: 1px gray solid;
     padding: 11px;
     font-size :12px;
+    display: none;
+}
+
+#errorBox .exception.visible {
+    display:block;
 }
 
 #errorBox .exception p {
@@ -20,9 +25,9 @@
     display:none;
 }
 
-#errorBox.visible .exception{
+/*#errorBox.visible .exception{
     display: block;
-}
+}*/
 
 div#errorBox {
     display: block;

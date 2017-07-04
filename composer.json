@@ -2,7 +2,7 @@
     "name": "danieljharvey/plop-catcher",
     "description": "Drop-in error catcher and general logger",
     "type": "library",
-    "version":"1.4",
+    "version":"1.5",
 	"require": {
         "danieljharvey/file-wrapper": "^1.6"
     },
