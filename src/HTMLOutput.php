@@ -175,7 +175,7 @@ class HTMLOutput {
 
 		$selectedLines=[];
 		for ($i=$firstLine; $i<=$lastLine; $i++) {
-			$selectedLines[$i + 1] = $lines[$i];
+			$selectedLines[$i + 1] = htmlentities($lines[$i]);
 		}
 
 		return $selectedLines;

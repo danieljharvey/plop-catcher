@@ -32,6 +32,8 @@ echo $nonExistantVariable;
 
 $plop->logComment("STUFF ETC");
 
+echo "<p>Some html that needs entity-ing{$broken} or something</p>";
+
 throw new Exception("dsfjsdofjoisdojfi");
 
 //require_once("fjsdjfjsdoijoi");
