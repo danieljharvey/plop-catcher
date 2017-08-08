@@ -2,9 +2,9 @@
     "name": "danieljharvey/plop-catcher",
     "description": "Drop-in error catcher and general logger",
     "type": "library",
-    "version":"1.7",
+    "version":"1.7.1",
 	"require": {
-        "danieljharvey/file-wrapper": "^1.6"
+        "danieljharvey/file-wrapper": ">=2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2"
